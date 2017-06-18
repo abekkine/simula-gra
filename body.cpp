@@ -11,6 +11,8 @@
 
 namespace body {
 
+    bool withLookAt = true;
+
     double cx = 0.0;
     double cy = 0.0;
     double cz = 0.0;
@@ -141,20 +143,25 @@ namespace body {
         glPushMatrix();
         glLoadIdentity();
 
-        glRotatef(thetaX, 1.0, 0.0, 0.0);
-        glRotatef(thetaY, 0.0, 1.0, 0.0);
-        glRotatef(thetaZ, 0.0, 0.0, 1.0);
+        if (withLookAt) {
+            gluLookAt(  0.0, 0.0, 0.0,
+                        cx, cy, cz,
+                        0.0, 0.0, 1.0);
+        } else {
+            glRotatef(thetaX, 1.0, 0.0, 0.0);
+            glRotatef(thetaY, 0.0, 1.0, 0.0);
+            glRotatef(thetaZ, 0.0, 0.0, 1.0);
 
-        // Focus on max bound index
-        glTranslatef(-cx, -cy, -cz);
-        //  End
+            // Focus on max bound index
+            glTranslatef(-cx, -cy, -cz);
 
-        thetaX += 0.125;
-        if (thetaX > 360.0) thetaX -= 360.0;
-        thetaY += 0.25;
-        if (thetaY > 360.0) thetaY -= 360.0;
-        thetaZ += 0.05;
-        if (thetaZ > 360.0) thetaZ -= 360.0;
+            thetaX += 0.125;
+            if (thetaX > 360.0) thetaX -= 360.0;
+            thetaY += 0.25;
+            if (thetaY > 360.0) thetaY -= 360.0;
+            thetaZ += 0.05;
+            if (thetaZ > 360.0) thetaZ -= 360.0;
+        }
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_COLOR_ARRAY);

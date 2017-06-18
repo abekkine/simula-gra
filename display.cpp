@@ -108,7 +108,11 @@ namespace display {
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-wsize, wsize, -hsize, hsize, -1000.0, 1000.0);
+        if (body::withLookAt) {
+            gluPerspective(60.0, wsize / hsize, 0.1, 1000);
+        } else {
+            glOrtho(-wsize, wsize, -hsize, hsize, -1000.0, 1000.0);
+        }
         glMatrixMode(GL_MODELVIEW);
     }
 
