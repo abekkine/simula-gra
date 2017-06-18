@@ -1,4 +1,4 @@
-TARGET=f2
+TARGET=simulaGra
 SRCS=$(wildcard *.cpp)
 OBJS=$(SRCS:%.cpp=%.o)
 FLAGS= -fopenmp -I/usr/include/freetype2 -std=c++11 `pkg-config --cflags opencv`
