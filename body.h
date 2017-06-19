@@ -36,7 +36,14 @@ namespace body {
         uint32_t bound;
 
         Body(double& x0, double& y0, double& z0) :
-            px(x0), py(y0), pz(z0) {}
+            px(x0), py(y0), pz(z0),
+            m(0.0), pressure(0.0), bound(0) {
+            for (int i=0; i<N; i++) {
+                x[i] = 0.0;
+                vx[i] = 0.0;
+                ax[i] = 0.0;
+            }
+        }
     };
 
     extern std::vector< Body > list;

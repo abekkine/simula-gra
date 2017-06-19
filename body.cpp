@@ -67,7 +67,6 @@ namespace body {
         std::mt19937 rng;
         rng.seed(Seed);
 
-        double r, p, q, v;
         for (int i=0; i<num; i++) {
             Body b(positions[3*i + 0], positions[3*i +1], positions[3*i + 2]);
             b.m = Mass;
@@ -77,9 +76,9 @@ namespace body {
             colors[4*i + 2] = 0.0;
             colors[4*i + 3] = 1.0;
 
-            r = rdist(rng);
-            p = pdist(rng);
-            q = qdist(rng);
+            double r = rdist(rng);
+            double p = pdist(rng);
+            double q = qdist(rng);
             b.x[0] = r * cos(p) * cos(q);
             b.x[1] = r * cos(p) * sin(q);
             b.x[2] = r * sin(p);
@@ -88,7 +87,7 @@ namespace body {
             b.py = b.x[1];
             b.pz = b.x[2];
 
-            v = vdist(rng);
+            double v = vdist(rng);
             b.vx[0] =  1.0 * b.x[1] * v / r;
             b.vx[1] = -1.0 * b.x[0] * v / r;
             b.vx[2] = 0.0;
