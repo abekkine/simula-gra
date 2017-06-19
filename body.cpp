@@ -155,11 +155,17 @@ namespace body {
             glTranslatef(-cx, -cy, -cz);
 
             thetaX += 0.125;
-            if (thetaX > 360.0) thetaX -= 360.0;
+            if (thetaX > 360.0) {
+                thetaX -= 360.0;
+            }
             thetaY += 0.25;
-            if (thetaY > 360.0) thetaY -= 360.0;
+            if (thetaY > 360.0) {
+                thetaY -= 360.0;
+            }
             thetaZ += 0.05;
-            if (thetaZ > 360.0) thetaZ -= 360.0;
+            if (thetaZ > 360.0) {
+                thetaZ -= 360.0;
+            }
         }
 
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -189,7 +195,9 @@ namespace body {
 
     void drawCubeFrame() {
        
-        if (max_bound_ix == -1) return;
+        if (max_bound_ix == -1) {
+            return;
+        }
 
         glPushMatrix();
 
@@ -232,8 +240,12 @@ namespace body {
             const float pmax = 4.5;
             const float pmin = -2.0;
             float c = std::log10(list[i].pressure);
-            if (c < pmin) c = pmin;
-            else if (c > pmax) c = pmax;
+            if (c < pmin) {
+                c = pmin;
+            }
+            else if (c > pmax) {
+                c = pmax;
+            }
             c -= pmin;
             c = c / (pmax - pmin);
             colors[4*i + 0] = c;
@@ -285,7 +297,9 @@ namespace body {
 
         to_a = 0.0;
         double drN = 1.0;
-        for (int k=0; k<N; k++) drN *= dr;
+        for (int k=0; k<N; k++) {
+            drN *= dr;
+        }
         Kmr = K * to.m / drN;
         for (int k=0; k<N; k++) {
             to_ax[k] = Kmr * dx[k];

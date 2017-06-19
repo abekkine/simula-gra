@@ -39,7 +39,7 @@ namespace display {
 
     void init_device() {
         glfwSetErrorCallback(errorCallback);
-        if (!glfwInit()) {
+        if (not glfwInit()) {
             std::cerr << "GLFW initialization failed!" << std::endl;
             throw;
         }
@@ -48,12 +48,20 @@ namespace display {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         if (enableFullScreen_) {
-            window_ = glfwCreateWindow(screenWidth_, screenHeight_, "F3", glfwGetPrimaryMonitor(), NULL);
+            window_ = glfwCreateWindow(
+                screenWidth_, screenHeight_,
+                "F3",
+                glfwGetPrimaryMonitor(),
+                NULL);
         } else {
-            window_ = glfwCreateWindow(screenWidth_, screenHeight_, "F3", NULL, NULL);
+            window_ = glfwCreateWindow(
+                screenWidth_, screenHeight_,
+                "F3",
+                NULL,
+                NULL);
         }
 
-        if (!window_) {
+        if (not window_) {
             glfwTerminate();
             std::cerr << "Unable to create GLFW window!" << std::endl;
             throw;
@@ -165,26 +173,38 @@ namespace display {
     cv::VideoWriter writer;
     void save_buffer() {
 
-        if (frame == -1) return;
+        if (frame == -1) {
+            return;
+        }
         if (frame == 0) {
-            writer.open(VideoFile.c_str(), cv::VideoWriter::fourcc('X','2','6','4'), 25.0f, cv::Size(screenWidth_, screenHeight_), true);
+            writer.open(
+                VideoFile.c_str(),
+                cv::VideoWriter::fourcc('X', '2', '6', '4'),
+                25.0f,
+                cv::Size(screenWidth_, screenHeight_),
+                true);
             frame++;
         }
-        else if(frame < recordLength_) {
+        else if (frame < recordLength_) {
             cv::Mat pixels( screenHeight_, screenWidth_, CV_8UC3 );
             glReadPixels(0, 0, screenWidth_, screenHeight_, GL_RGB, GL_UNSIGNED_BYTE, pixels.data);
             cv::Mat cv_pixels( screenHeight_, screenWidth_, CV_8UC3 );
             #pragma omp parallel for
-            for (int y=0; y<screenHeight_; y++) for (int x=0; x<screenWidth_; x++) {
-                cv_pixels.at<cv::Vec3b>(y,x)[2] = pixels.at<cv::Vec3b>(screenHeight_-y-1,x)[0];
-                cv_pixels.at<cv::Vec3b>(y,x)[1] = pixels.at<cv::Vec3b>(screenHeight_-y-1,x)[1];
-                cv_pixels.at<cv::Vec3b>(y,x)[0] = pixels.at<cv::Vec3b>(screenHeight_-y-1,x)[2];
+            for (int y=0; y<screenHeight_; y++) {
+                for (int x=0; x<screenWidth_; x++) {
+                    cv_pixels.at<cv::Vec3b>(y, x)[2]
+                        = pixels.at<cv::Vec3b>(screenHeight_-y-1, x)[0];
+                    cv_pixels.at<cv::Vec3b>(y, x)[1]
+                        = pixels.at<cv::Vec3b>(screenHeight_-y-1, x)[1];
+                    cv_pixels.at<cv::Vec3b>(y, x)[0]
+                        = pixels.at<cv::Vec3b>(screenHeight_-y-1, x)[2];
+                }
             }
             writer << cv_pixels;
             frame++;
             printf("%d/%d\n", frame, recordLength_);
         }
-        else if(frame == recordLength_) {
+        else if (frame == recordLength_) {
             writer.release();
             printf("Video is ready!\n");
             frame = -1;
@@ -192,4 +212,3 @@ namespace display {
         }
     }
 }
-

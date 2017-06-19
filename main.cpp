@@ -30,7 +30,7 @@ int main() {
     display::init();
     universe::init();
 
-    while (!display::quit()) {
+    while (not display::quit()) {
         display::clear();
         universe::render();
         universe::update();
