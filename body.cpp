@@ -7,7 +7,6 @@
 #include <random>
 
 #include "display.h"
-#include "util.h"
 
 namespace body {
 
@@ -179,17 +178,6 @@ namespace body {
 
         drawCubeFrame();
 
-        // Draw a marker for given index
-//        float mx = positions[2 * marker_ix + 0];
-//        float my = positions[2 * marker_ix + 1];
-//        glColor4f(1.0, 0.0, 0.0, 0.5);
-//        glBegin(GL_LINE_LOOP);
-//            glVertex2f(mx - 1.0, my - 1.0);
-//            glVertex2f(mx - 1.0, my + 1.0);
-//            glVertex2f(mx + 1.0, my + 1.0);
-//            glVertex2f(mx + 1.0, my - 1.0);
-//        glEnd();
-
         glPopMatrix();
     }
 
@@ -221,7 +209,6 @@ namespace body {
 
         double timeStep = TimeStep;
 
-        //util::start_clock();
         #pragma omp parallel for
         for (int i=0; i<numBodies; i++) {
 
@@ -253,7 +240,6 @@ namespace body {
             colors[4*i + 2] = c;
             colors[4*i + 3] = 1;
         }
-        //util::stop_clock();
 
         update_camera_path();
     }

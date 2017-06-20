@@ -32,7 +32,10 @@ namespace universe {
     }
 
     void init() {
+        std::cout << "init() @ ";
+        util::start_clock();
         add_mass_distribution();
+        util::stop_clock();
     }
 
     void update() {

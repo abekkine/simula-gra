@@ -1,3 +1,5 @@
+#!/bin/bash
+
  echo "#ifndef VERSION_H_" > version.h
  echo "#define VERSION_H_" >> version.h
  echo >> version.h
