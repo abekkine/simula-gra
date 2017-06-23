@@ -102,6 +102,7 @@ namespace body {
 
         numBodies = num;
         positions = new double[num * 3];
+        colors = new float[num * 4];
 
         std::uniform_real_distribution<double> xdist(-length, length);
         std::uniform_real_distribution<double> vdist(-SpeedRange, SpeedRange);
@@ -128,9 +129,135 @@ namespace body {
     }
 
     void add_random_spherical(int num, double radius) {
+    
+        numBodies = num;
+        positions = new double[num * 3];
+        colors = new float[num * 4];
+
+        std::uniform_real_distribution<double> xdist(-radius, radius);
+        
+        std::mt19937 rng;
+        rng.seed(std::random_device{}());
+        double x1, x2, x3;
+        int i = 0;
+        while (i < num) {
+
+            x1 = xdist(rng);
+            x2 = xdist(rng);
+            x3 = xdist(rng);
+            if (x1*x1 + x2*x2 + x3*x3 <= radius*radius) {
+                Body b(positions[3*i + 0], positions[3*i + 1], positions[3*i + 2]);
+                b.m = Mass;
+                for (int k=0; k<N; k++) {
+                    b.x[k] = 0.0;
+                    b.vx[k] = 0.0;
+                }
+
+                colors[4*i + 0] = 1.0;
+                colors[4*i + 1] = 0.0;
+                colors[4*i + 2] = 0.0;
+                colors[4*i + 3] = 1.0;
+
+                b.x[0] = x1;
+                b.x[1] = x2;
+                b.x[2] = x3;
+
+                b.vx[0] = 0.0;
+                b.vx[1] = 0.0;
+                b.vx[2] = 0.0;
+
+                b.px = b.x[0];
+                b.py = b.x[1];
+                b.pz = b.x[2];
+
+                b.pressure = 0.0;
+                b.bound = 0;
+
+                list.push_back(b);
+                i++;
+            }
+        }
     }
 
-    void add_uniform_cubic(int num, double length) {
+    void add_noise(double& x, double& y, double& z, std::mt19937& rng) {
+
+        std::uniform_real_distribution<double> dist(-2.0, 2.0);
+        x += dist(rng);
+        y += dist(rng);
+        z += dist(rng);
+    }
+
+    void add_uniform_cubic(int num, double length, bool noise) {
+        
+        printf("add_uniform_cubic(%d, %f, %s)\n", num, length, noise ? "true" : "false");
+
+        double dNumAtEdge = pow((double)num, (1.0 / 3.0));
+        int iNumAtEdge = (int)floor(dNumAtEdge);
+        double edgeStep = length / iNumAtEdge;
+
+        printf("..dNumAtEdge(%f)\n", dNumAtEdge);
+        printf("..iNumAtEdge(%d)\n", iNumAtEdge);
+        printf("..edgeStep(%f)\n", edgeStep);
+
+        double px, py, pz;
+
+        numBodies = (int)iNumAtEdge;
+        numBodies = numBodies * numBodies * numBodies;
+
+        printf("..numBodies(%d)\n", numBodies);
+
+        positions = new double[numBodies * 3];
+        colors = new float[numBodies * 4];
+
+        printf("..positions[%d * 3](%8lx)\n", numBodies, (uint64_t)positions);
+        printf("..colors[%d * 4](%8lx)\n", numBodies, (uint64_t)colors);
+
+        std::mt19937 rng;
+        rng.seed(std::random_device{}());
+
+        int i=0;
+        for (int ix=0; ix<iNumAtEdge; ix++) {
+            for (int iy=0; iy<iNumAtEdge; iy++) {
+                for (int iz=0; iz<iNumAtEdge; iz++) {
+
+                    px = ix * edgeStep - 0.5 * length;
+                    py = iy * edgeStep - 0.5 * length;
+                    pz = iz * edgeStep - 0.5 * length;
+
+                    //printf("..i(%d), px(%f), py(%f), pz(%f)\n", i, px, py, pz);
+
+                    if (noise) {
+                        add_noise(px, py, pz, rng);
+                    }
+                    // create body.
+                    {
+                        Body b(positions[3*i+0], positions[3*i+1], positions[3*i+2]);
+                        b.m = Mass;
+                        for (int k=0; k<N; k++) {
+                            b.x[k] = 0.0;
+                            b.vx[k] = 0.0;
+                        }
+
+                        colors[4*i+0] = 1.0;
+                        colors[4*i+1] = 0.0;
+                        colors[4*i+2] = 0.0;
+                        colors[4*i+3] = 1.0;
+
+                        b.x[0] = px;
+                        b.x[1] = py;
+                        b.x[2] = pz;
+
+                        b.pressure = 0.0;
+                        b.bound = 0;
+
+                        list.push_back(b);
+                        i++;
+                    }
+                }
+            }
+        }
+
+        printf("..i(%d), px(%f), py(%f), pz(%f)\n", i, px, py, pz);
     }
 
     float thetaX = 0.0;

@@ -26,6 +26,8 @@ namespace display {
     GLFWwindow* window_;
 
     void init() {
+        puts("display::init()");
+
         screenWidth_ = ScreenWidth;
         screenHeight_ = ScreenHeight;
         recordLength_ = 25 * RecordDuration;
@@ -38,6 +40,8 @@ namespace display {
     }
 
     void init_device() {
+        puts("display::init_device()");
+
         glfwSetErrorCallback(errorCallback);
         if (not glfwInit()) {
             std::cerr << "GLFW initialization failed!" << std::endl;
@@ -90,14 +94,20 @@ namespace display {
     }
 
     bool quit() {
+        //puts("display::quit()");
+
         return glfwWindowShouldClose(window_);
     }
 
     void clear() {
+        //puts("display::clear()");
+
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
     void update() {
+        //puts("display::update()");
+
         glfwSwapBuffers(window_);
         glfwPollEvents();
 
@@ -105,11 +115,13 @@ namespace display {
     }
 
     void exit() {
+        puts("display::exit()");
 
         glfwTerminate();
     }
 
     void world_mode() {
+        //puts("display::world_mode()");
 
         double wsize = WorldSize;
         double hsize = WorldSize * ScreenHeight / ScreenWidth;
@@ -125,6 +137,7 @@ namespace display {
     }
 
     void ui_mode() {
+        //puts("display::ui_mode()");
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();

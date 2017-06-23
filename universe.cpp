@@ -13,6 +13,8 @@ namespace universe {
     int MassDistribution;
 
     void add_mass_distribution() {
+        puts("universe::add_mass_distribution()");
+
         switch(MassDistribution) {
             case D_ROTATING_SPHERICAL:
                 body::add_rotating_spherical(NumBodies, SpreadRadius);
@@ -21,10 +23,13 @@ namespace universe {
                 body::add_random_cubic(NumBodies, SpreadRadius);
                 break;
             case D_RANDOM_SPHERICAL:
+                body::add_random_spherical(NumBodies, SpreadRadius);
+                break;
             case D_UNIFORM_CUBICAL:
+                body::add_uniform_cubic(NumBodies, SpreadRadius, false);
+                break;
             case D_UNIFORM_CUBICAL_W_NOISE:
-                puts("Not implemented yet!");
-                ::exit(1);
+                body::add_uniform_cubic(NumBodies, SpreadRadius, true);
                 break;
             default:
                 break;
@@ -32,13 +37,14 @@ namespace universe {
     }
 
     void init() {
-        std::cout << "init() @ ";
+        std::cout << "universe::init() @ ";
         util::start_clock();
         add_mass_distribution();
         util::stop_clock();
     }
 
     void update() {
+        //puts("universe::update()");
 
         #pragma omp parallel for
         for (int i=0; i<body::list.size(); i++) {
@@ -68,6 +74,7 @@ namespace universe {
     }
 
     void render() {
+        //puts("universe::render()");
 
         display::world_mode();
 

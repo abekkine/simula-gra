@@ -55,7 +55,7 @@ namespace body {
     void add_mass_distribution();
     void add_rotating_spherical(int num, double radius);
     void add_random_spherical(int num, double radius);
-    void add_uniform_cubic(int num, double length);
+    void add_uniform_cubic(int num, double length, bool noise);
     void add_random_cubic(int num, double length);
     void apply_gravity(Body& from, Body& to);
     void render();

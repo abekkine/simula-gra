@@ -23,8 +23,10 @@ int main() {
     body::CollisionRadius = 0.8;
     body::TerminalAcceleration = 400.0;
     body::SpeedRange = 5.0;
-    universe::MassDistribution = universe::DistributionType::D_ROTATING_SPHERICAL;
-    universe::NumBodies = 5000;
+    //universe::MassDistribution = universe::DistributionType::D_ROTATING_SPHERICAL;
+    //universe::MassDistribution = universe::DistributionType::D_RANDOM_SPHERICAL;
+    universe::MassDistribution = universe::DistributionType::D_UNIFORM_CUBICAL_W_NOISE;
+    universe::NumBodies = 2000;
     universe::SpreadRadius = 200.0;
 
     display::init();
