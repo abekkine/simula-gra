@@ -138,13 +138,12 @@ namespace body {
         
         std::mt19937 rng;
         rng.seed(std::random_device{}());
-        double x1, x2, x3;
         int i = 0;
         while (i < num) {
 
-            x1 = xdist(rng);
-            x2 = xdist(rng);
-            x3 = xdist(rng);
+            double x1 = xdist(rng);
+            double x2 = xdist(rng);
+            double x3 = xdist(rng);
             if (x1*x1 + x2*x2 + x3*x3 <= radius*radius) {
                 Body b(positions[3*i + 0], positions[3*i + 1], positions[3*i + 2]);
                 b.m = Mass;
