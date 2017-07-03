@@ -10,8 +10,6 @@
 
 namespace body {
 
-    bool withLookAt = true;
-
     double cx = 0.0;
     double cy = 0.0;
     double cz = 0.0;
@@ -267,7 +265,7 @@ namespace body {
         glPushMatrix();
         glLoadIdentity();
 
-        if (withLookAt) {
+        if (display::withLookAt) {
             gluLookAt(  0.0, 0.0, 0.0,
                         cx, cy, cz,
                         0.0, 0.0, 1.0);

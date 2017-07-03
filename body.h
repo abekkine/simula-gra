@@ -8,7 +8,6 @@ namespace body {
 
     const int N = 3;
 
-    extern bool withLookAt;
     extern double Seed;
     extern double Mass;
     extern double TimeStep;

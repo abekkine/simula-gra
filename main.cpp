@@ -14,8 +14,8 @@ int main() {
     display::VideoFile = "video.avi";
     display::ScreenWidth = 1920;
     display::ScreenHeight = 1080;
+    display::withLookAt = false;
 
-    body::withLookAt = false;
     body::GravityConstant = 0.5;
     body::Seed = 2.99281; //1.22498;
     body::TimeStep = 0.01;

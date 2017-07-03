@@ -8,6 +8,7 @@
 
 namespace display {
 
+    extern bool withLookAt;
     extern int ScreenWidth;
     extern int ScreenHeight;
     extern double WorldSize;
