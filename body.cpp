@@ -19,8 +19,11 @@ namespace body {
     double TimeStep;
     double SpeedRange;
     double GravityConstant;
+    double ExplosionConstant = 2.5;
     double CollisionRadius;
     double TerminalAcceleration;
+    float ThetaXSpeed, ThetaYSpeed, ThetaZSpeed;
+    int IgnitionLimit = 0;
 
     std::vector< Body > list;
     int numBodies;
@@ -277,15 +280,15 @@ namespace body {
             // Focus on max bound index
             glTranslatef(-cx, -cy, -cz);
 
-            thetaX += 0.125;
+            thetaX += ThetaXSpeed;
             if (thetaX > 360.0) {
                 thetaX -= 360.0;
             }
-            thetaY += 0.25;
+            thetaY += ThetaYSpeed;
             if (thetaY > 360.0) {
                 thetaY -= 360.0;
             }
-            thetaZ += 0.05;
+            thetaZ += ThetaZSpeed;
             if (thetaZ > 360.0) {
                 thetaZ -= 360.0;
             }
@@ -296,6 +299,7 @@ namespace body {
         glVertexPointer(3, GL_DOUBLE, 0, positions);
         glColorPointer(4, GL_FLOAT, 0, colors);
 
+        glPointSize(2.0);
         glDrawArrays(GL_POINTS, 0, numBodies);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -359,10 +363,16 @@ namespace body {
             }
             c -= pmin;
             c = c / (pmax - pmin);
-            colors[4*i + 0] = c;
-            colors[4*i + 1] = c;
-            colors[4*i + 2] = c;
-            colors[4*i + 3] = 1;
+            if (list[i].ignited) {
+                colors[4*i + 0] = 1.0;
+                colors[4*i + 1] = 0.91;
+                colors[4*i + 2] = 0.21;
+            } else {
+                colors[4*i + 0] = 0.43;
+                colors[4*i + 1] = 0.62;
+                colors[4*i + 2] = 1.0;
+            }
+            colors[4*i + 3] = c;
         }
 
         update_camera_path();
@@ -387,6 +397,31 @@ namespace body {
                 cz += 0.1 * dz;
             }
             
+        }
+    }
+
+    void explode_force(Body& body) {
+
+        puts("explode_force()");
+
+        double dx[N];
+        double dr2, dr;
+
+        #pragma omp parallel for
+        for (int i=0; i<numBodies; i++) {
+
+            dr2 = 0.0;
+            for(int k=0; k<N; k++) {
+                dx[k] = body.x[k] - list[i].x[k];
+                dr2 += dx[k] * dx[k];
+            }
+            dr = sqrt(dr2);
+
+            if (dr > CollisionRadius * 1.25) {
+                for(int k=0; k<N; k++) {
+                    list[i].ax[k] -= ExplosionConstant * GravityConstant * Mass * dx[k] / dr2;
+                }
+            }
         }
     }
 
@@ -427,6 +462,10 @@ namespace body {
             from.pressure += TerminalAcceleration;
             from.bound++;
 
+            if (from.bound > IgnitionLimit && from.ignited == false) {
+                from.ignited = true;
+                explode_force(from);
+            }
         }
         else {
             for (int k=0; k<N; k++) {

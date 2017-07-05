@@ -13,8 +13,13 @@ namespace body {
     extern double TimeStep;
     extern double SpeedRange;
     extern double GravityConstant;
+    extern double ExplosionConstant;
     extern double CollisionRadius;
     extern double TerminalAcceleration;
+    extern float ThetaXSpeed;
+    extern float ThetaYSpeed;
+    extern float ThetaZSpeed;
+    extern int IgnitionLimit;
 
     extern uint32_t max_bound;
     extern int32_t max_bound_ix;
@@ -33,10 +38,12 @@ namespace body {
         double ax[N];
         double pressure;
         uint32_t bound;
+        bool ignited;
 
         Body(double& x0, double& y0, double& z0) :
             px(x0), py(y0), pz(z0),
-            m(0.0), pressure(0.0), bound(0) {
+            m(0.0), pressure(0.0), bound(0),
+            ignited(false) {
             for (int i=0; i<N; i++) {
                 x[i] = 0.0;
                 vx[i] = 0.0;

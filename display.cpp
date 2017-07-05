@@ -216,7 +216,9 @@ namespace display {
             }
             writer << cv_pixels;
             frame++;
-            printf("%d/%d\n", frame, recordLength_);
+            if (frame % 100 == 0) {
+                printf("%d/%d\n", frame, recordLength_);
+            }
         }
         else if (frame == recordLength_) {
             writer.release();
